@@ -93,7 +93,9 @@
       "Bash(for:*)",
       "Bash(do netstat -ano)",
       "Bash(xargs:*)",
-      "Bash(done)"
+      "Bash(done)",
+      "Bash(git add .)",
+      "Bash(git add frontend/src/lib/api.ts)"
     ]
   }
 }
