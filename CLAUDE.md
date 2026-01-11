@@ -49,7 +49,7 @@ After completing requests, you **MUST** create a PHR (Prompt History Record).
 2) Generate title
    - 3–7 words; create a slug for the filename.
 
-2a) Resolve route (all under history/prompts/)
+2a) Resolve route (all under history/prompts/):
   - `constitution` → `history/prompts/constitution/`
   - Feature stages (spec, plan, tasks, red, green, refactor, explainer, misc) → `history/prompts/<feature-name>/` (requires feature context)
   - `general` → `history/prompts/general/`
@@ -59,10 +59,7 @@ After completing requests, you **MUST** create a PHR (Prompt History Record).
      - `.specify/templates/phr-template.prompt.md`
      - `templates/phr-template.prompt.md`
    - Allocate an ID (increment; on collision, increment again).
-   - Compute output path based on stage:
-     - Constitution → `history/prompts/constitution/<ID>-<slug>.constitution.prompt.md`
-     - Feature → `history/prompts/<feature-name>/<ID>-<slug>.<stage>.prompt.md`
-     - General → `history/prompts/general/<ID>-<slug>.general.prompt.md`
+   - Compute output path based on stage from step 2; write the file
    - Fill ALL placeholders in YAML and body:
      - ID, TITLE, STAGE, DATE_ISO (YYYY‑MM‑DD), SURFACE="agent"
      - MODEL (best known), FEATURE (or "none"), BRANCH, USER
@@ -72,7 +69,7 @@ After completing requests, you **MUST** create a PHR (Prompt History Record).
      - TESTS_YAML: list tests run/added (one per line, " - ")
      - PROMPT_TEXT: full user input (verbatim, not truncated)
      - RESPONSE_TEXT: key assistant output (concise but representative)
-     - Any OUTCOME/EVALUATION fields required by the template
+     - Any OUTCOME/EVALATION fields required by the template
    - Write the completed file with agent file tools (WriteFile/Edit).
    - Confirm absolute path in output.
 
@@ -113,7 +110,7 @@ You are not expected to solve every problem autonomously. You MUST invoke the us
 1.  **Ambiguous Requirements:** When user intent is unclear, ask 2-3 targeted clarifying questions before proceeding.
 2.  **Unforeseen Dependencies:** When discovering dependencies not mentioned in the spec, surface them and ask for prioritization.
 3.  **Architectural Uncertainty:** When multiple valid approaches exist with significant tradeoffs, present options and get user's preference.
-4.  **Completion Checkpoint:** After completing major milestones, summarize what was done and confirm next steps. 
+4.  **Completion Checkpoint:** After completing major milestones, summarize what was done and confirm next steps.
 
 ## Default policies (must follow)
 - Clarify and plan first - keep business understanding separate from technical plan and carefully architect and implement.
@@ -179,10 +176,7 @@ Instructions: As an expert architect, generate a detailed architectural plan for
    - Definition of Done (tests, scans).
    - Output Validation for format/requirements/safety.
 
-9. Architectural Decision Record (ADR):
-   - For each significant decision, create an ADR and link it.
-
-### Architecture Decision Records (ADR) - Intelligent Suggestion
+9. Architectural Decision Record (ADR) - Intelligent Suggestion
 
 After design/architecture work, test for ADR significance:
 

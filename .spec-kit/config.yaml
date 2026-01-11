@@ -1,0 +1,44 @@
+# Spec Kit Configuration
+# Project: Todo Full-Stack Web Application
+
+project:
+  name: "Todo Full-Stack Web Application"
+  description: "Multi-user todo application with Next.js frontend and FastAPI backend"
+  version: "1.0.0"
+  repository: ""
+
+features:
+  - name: "todo-fullstack-web"
+    path: "./specs/1-todo-fullstack-web/"
+    status: "active"
+
+directories:
+  specs: "./specs/"
+  backend: "./backend/"
+  frontend: "./frontend/"
+  assets: "./assets/"
+
+files:
+  readme: "./README.md"
+  license: "./LICENSE"
+  changelog: "./CHANGELOG.md"
+
+dependencies:
+  backend:
+    - "FastAPI"
+    - "SQLModel"
+    - "Better Auth"
+    - "Neon PostgreSQL"
+  frontend:
+    - "Next.js 16+"
+    - "TypeScript"
+    - "React"
+
+targets:
+  backend: "Python 3.13+"
+  frontend: "ES2022"
+  deployment: "Vercel (frontend), Cloud Provider (backend)"
+
+deployment:
+  frontend_url: ""
+  backend_url: ""
