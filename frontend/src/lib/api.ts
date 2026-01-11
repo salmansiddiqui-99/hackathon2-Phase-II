@@ -1,5 +1,7 @@
 // API client utility for making authenticated requests
 
+import { Task } from '../types';
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
 
 class ApiClient {
@@ -75,22 +77,22 @@ class ApiClient {
 
   // Task endpoints
   async getTasks(userId: number) {
-    return this.request(`/api/${userId}/tasks`);
+    return this.request<Task[]>(`/api/${userId}/tasks`);
   }
 
   async createTask(userId: number, taskData: { title: string; description?: string }) {
-    return this.request(`/api/${userId}/tasks`, {
+    return this.request<Task>(`/api/${userId}/tasks`, {
       method: 'POST',
       body: JSON.stringify(taskData),
     });
   }
 
   async getTaskById(userId: number, taskId: number) {
-    return this.request(`/api/${userId}/tasks/${taskId}`);
+    return this.request<Task>(`/api/${userId}/tasks/${taskId}`);
   }
 
   async updateTask(userId: number, taskId: number, taskData: { title?: string; description?: string; completed?: boolean }) {
-    return this.request(`/api/${userId}/tasks/${taskId}`, {
+    return this.request<Task>(`/api/${userId}/tasks/${taskId}`, {
       method: 'PUT',
       body: JSON.stringify(taskData),
     });
@@ -103,7 +105,7 @@ class ApiClient {
   }
 
   async toggleTaskCompletion(userId: number, taskId: number) {
-    return this.request(`/api/${userId}/tasks/${taskId}/complete`, {
+    return this.request<Task>(`/api/${userId}/tasks/${taskId}/complete`, {
       method: 'PATCH',
     });
   }
