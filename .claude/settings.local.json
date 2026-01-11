@@ -95,7 +95,12 @@
       "Bash(xargs:*)",
       "Bash(done)",
       "Bash(git add .)",
-      "Bash(git add frontend/src/lib/api.ts)"
+      "Bash(git add frontend/src/lib/api.ts)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nFix TypeScript errors in API client for Vercel deployment\n\n- Fix headers type error by using Record<string, string> to allow dynamic keys\n- Add proper return type annotations to API methods \\(getTaskById, getTasks, etc.\\)\n- Import Task type for proper typing of API responses\n- Resolve \"Element implicitly has an 'any' type\" error that was blocking Vercel build\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push origin 1-todo-fullstack-web)",
+      "Bash(git add package.json package-lock.json)",
+      "Bash(git add frontend/package.json frontend/package-lock.json)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nUpdate Next.js to resolve security vulnerability CVE-2025-66478\n\n- Update Next.js from 15.1.0 to 15.2.0 to address security vulnerability\n- Update eslint-config-next to match Next.js version\n- Resolve Vercel deployment error due to vulnerable Next.js version\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")"
     ]
   }
 }
