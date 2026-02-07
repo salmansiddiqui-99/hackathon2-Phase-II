@@ -77,36 +77,36 @@ class ApiClient {
   }
 
   // Task endpoints
-  async getTasks(userId: number) {
-    return this.request<Task[]>(`/api/${userId}/tasks`);
+  async getTasks() {
+    return this.request<Task[]>('/api/tasks');
   }
 
-  async createTask(userId: number, taskData: { title: string; description?: string }) {
-    return this.request<Task>(`/api/${userId}/tasks`, {
+  async createTask(taskData: { title: string; description?: string }) {
+    return this.request<Task>('/api/tasks', {
       method: 'POST',
       body: JSON.stringify(taskData),
     });
   }
 
-  async getTaskById(userId: number, taskId: number) {
-    return this.request<Task>(`/api/${userId}/tasks/${taskId}`);
+  async getTaskById(taskId: number) {
+    return this.request<Task>(`/api/tasks/${taskId}`);
   }
 
-  async updateTask(userId: number, taskId: number, taskData: { title?: string; description?: string; completed?: boolean }) {
-    return this.request<Task>(`/api/${userId}/tasks/${taskId}`, {
+  async updateTask(taskId: number, taskData: { title?: string; description?: string; completed?: boolean }) {
+    return this.request<Task>(`/api/tasks/${taskId}`, {
       method: 'PUT',
       body: JSON.stringify(taskData),
     });
   }
 
-  async deleteTask(userId: number, taskId: number) {
-    return this.request(`/api/${userId}/tasks/${taskId}`, {
+  async deleteTask(taskId: number) {
+    return this.request(`/api/tasks/${taskId}`, {
       method: 'DELETE',
     });
   }
 
-  async toggleTaskCompletion(userId: number, taskId: number) {
-    return this.request<Task>(`/api/${userId}/tasks/${taskId}/complete`, {
+  async toggleTaskCompletion(taskId: number) {
+    return this.request<Task>(`/api/tasks/${taskId}/complete`, {
       method: 'PATCH',
     });
   }

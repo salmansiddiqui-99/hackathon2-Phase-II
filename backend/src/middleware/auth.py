@@ -23,6 +23,11 @@ async def jwt_middleware(request: Request, call_next: Callable) -> Awaitable:
         "/redoc"
     ]
 
+    # Allow OPTIONS requests (preflight) to pass through for CORS
+    if request.method == "OPTIONS":
+        response = await call_next(request)
+        return response
+
     # Allow public routes without token validation
     if request.url.path in public_routes:
         response = await call_next(request)

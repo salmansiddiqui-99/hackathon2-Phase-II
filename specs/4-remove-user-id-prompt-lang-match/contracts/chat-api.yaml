@@ -1,0 +1,66 @@
+# API Contract: Enhanced Chat Endpoint
+
+## Overview
+This contract defines the updated chat API endpoint that removes user ID from the path and automatically uses the authenticated user's ID from the JWT token.
+
+## Endpoint: POST /api/chat
+
+### Request
+**Path**: `/api/chat`
+
+**Headers**:
+- `Authorization: Bearer <JWT_TOKEN>` (required)
+- `Content-Type: application/json` (required)
+
+**Body**:
+```json
+{
+  "conversation_id": 123,
+  "message": "Add a task to buy groceries"
+}
+```
+
+**Parameters**:
+- `conversation_id`: Integer (optional) - ID of the existing conversation, if continuing a conversation
+- `message`: String (required) - The user's message to the AI assistant
+
+### Response
+**Success Response (200 OK)**:
+```json
+{
+  "conversation_id": 123,
+  "response": "I've added the task 'buy groceries' to your list.",
+  "tool_calls": [
+    {
+      "name": "add_task",
+      "arguments": {
+        "title": "buy groceries",
+        "user_id": 1
+      }
+    }
+  ]
+}
+```
+
+**Parameters**:
+- `conversation_id`: Integer - ID of the conversation (newly created if not provided)
+- `response`: String - The AI assistant's response to the user
+- `tool_calls`: Array - List of tool calls made by the AI (if any)
+
+### Error Responses
+**401 Unauthorized**:
+- When JWT token is missing or invalid
+
+**400 Bad Request**:
+- When message field is missing or empty
+- When message exceeds character limits
+
+## Authentication
+- The endpoint expects a valid JWT token in the Authorization header
+- The user ID is extracted from the JWT token and used automatically for all operations
+- No user ID is required in the request body or path
+
+## Security
+- All operations are scoped to the authenticated user's data
+- Users cannot access or modify other users' tasks
+- User ID is never accepted from user input or path parameters

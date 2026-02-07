@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from pydantic import BaseModel
 from typing import Optional, List
 
@@ -17,6 +17,11 @@ tasks_db: List[Task] = [
     Task(id=2, user_id=1, title="Another task", description="This is another task", completed=True)
 ]
 
+# Mock authentication function for test server
+def get_current_user_id():
+    """Mock function to simulate getting user_id from JWT token"""
+    return 1  # Return a default user_id for testing
+
 @app.get("/")
 def read_root():
     return {"message": "Welcome to the Todo API - Simple Test Version"}
@@ -25,14 +30,14 @@ def read_root():
 def health_check():
     return {"status": "healthy", "service": "todo-api-test"}
 
-@app.get("/api/{user_id}/tasks", response_model=List[Task])
-def get_tasks(user_id: int):
-    user_tasks = [task for task in tasks_db if task.user_id == user_id]
+@app.get("/api/tasks", response_model=List[Task])
+def get_tasks(current_user_id: int = Depends(get_current_user_id)):
+    user_tasks = [task for task in tasks_db if task.user_id == current_user_id]
     return user_tasks
 
-@app.post("/api/{user_id}/tasks", response_model=Task)
-def create_task(user_id: int, task: Task):
-    task.user_id = user_id
+@app.post("/api/tasks", response_model=Task)
+def create_task(task: Task, current_user_id: int = Depends(get_current_user_id)):
+    task.user_id = current_user_id
     task.id = max([t.id for t in tasks_db]) + 1 if tasks_db else 1
     tasks_db.append(task)
     return task
