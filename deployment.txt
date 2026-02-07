@@ -1,0 +1,144 @@
+# Deployment Guide: Phase III AI Todo Chatbot
+
+## Overview
+This guide provides step-by-step instructions for deploying the AI Todo Chatbot application with the frontend on Vercel and the backend on Hugging Face Spaces.
+
+## Prerequisites
+- A Vercel account (https://vercel.com)
+- A Hugging Face account (https://huggingface.co)
+- A Neon account for PostgreSQL (https://neon.tech)
+- Cohere API key for AI capabilities
+- Git installed locally
+
+## Backend Deployment (Hugging Face Spaces)
+
+### Step 1: Prepare Backend for Hugging Face
+1. Navigate to the `backend/` directory
+2. Ensure the following files are present:
+   - `Dockerfile` (for containerization)
+   - `requirements.txt` (dependencies)
+   - `src/main.py` (entry point)
+   - `README.md` (for Space description)
+
+### Step 2: Create Hugging Face Space
+1. Log in to your Hugging Face account
+2. Click "New Space"
+3. Choose the following settings:
+   - **Space SDK**: Docker
+   - **Hardware**: CPU (for basic deployment) or appropriate GPU
+   - **Repository Name**: Choose a unique name (e.g., `todo-chatbot-backend`)
+   - **Visibility**: Public or Private as needed
+
+### Step 3: Configure Environment Variables
+In your Hugging Face Space settings, add the following environment variables:
+```
+DATABASE_URL=your_neon_postgresql_connection_string
+BETTER_AUTH_SECRET=your_jwt_secret_key
+COHERE_API_KEY=your_cohere_api_key
+```
+
+### Step 4: Upload Backend Code
+Upload your backend code to the Space repository using Git:
+```bash
+# Clone your Space repository
+git clone https://huggingface.co/spaces/your_username/todo-chatbot-backend
+
+# Copy backend files to the repository
+cd todo-chatbot-backend
+cp -r ../backend/* .
+
+# Update the Dockerfile if needed to match the project structure
+# Ensure the CMD in Dockerfile points to the right entry point
+
+# Commit and push
+git add .
+git commit -m "Deploy backend"
+git push origin main
+```
+
+### Step 5: Monitor Deployment
+1. Watch the deployment logs in the Hugging Face Spaces interface
+2. Wait for the build to complete
+3. The backend will be available at: `https://your_username-space-name.hf.space`
+
+## Frontend Deployment (Vercel)
+
+### Step 1: Prepare Frontend for Vercel
+1. Navigate to the `frontend/` directory
+2. Ensure the following files are properly configured:
+   - `package.json` (dependencies and build scripts)
+   - `next.config.js` (configuration)
+
+### Step 2: Deploy to Vercel
+1. Install the Vercel CLI (optional):
+   ```bash
+   npm i -g vercel
+   ```
+
+2. Log in to Vercel:
+   ```bash
+   vercel login
+   ```
+
+3. Deploy from the frontend directory:
+   ```bash
+   cd frontend
+   vercel --prod
+   ```
+
+   Or connect your GitHub repository to Vercel for automatic deployments.
+
+### Step 3: Configure Environment Variables
+In the Vercel dashboard (Settings → Environment Variables), add:
+```
+NEXT_PUBLIC_API_BASE_URL=https://your_username-space-name.hf.space
+NEXT_PUBLIC_CHATKIT_ENABLED=true
+```
+
+Replace `https://your_username-space-name.hf.space` with your actual Hugging Face backend URL.
+
+## Configuration and Integration
+
+### Step 1: Verify Backend Health
+Once deployed, verify your backend is working:
+1. Visit your Hugging Face Space URL
+2. Test the health endpoint: `https://your_username-space-name.hf.space/health`
+3. Verify you can access the docs: `https://your_username-space-name.hf.space/docs`
+
+### Step 2: Verify Frontend Connection
+1. Visit your Vercel frontend URL
+2. Register a new account to test the full flow
+3. Verify that API calls to your backend are working
+4. Test the chat functionality
+
+## Environment Variables Reference
+
+### Backend (Hugging Face Spaces)
+- `DATABASE_URL`: Neon PostgreSQL connection string
+- `BETTER_AUTH_SECRET`: JWT secret key (32+ characters)
+- `COHERE_API_KEY`: Cohere API key for AI capabilities
+
+### Frontend (Vercel)
+- `NEXT_PUBLIC_API_BASE_URL`: Backend API URL (your HF Space URL)
+- `NEXT_PUBLIC_CHATKIT_ENABLED`: Enable/disable ChatKit UI
+
+## Troubleshooting
+
+### Common Issues
+1. **API Connection Errors**: Verify `NEXT_PUBLIC_API_BASE_URL` points to your deployed backend
+2. **Database Connection Issues**: Verify `DATABASE_URL` is correctly set in Hugging Face
+3. **Authentication Problems**: Confirm JWT secret is properly configured
+4. **AI/MCP Server Issues**: Check that `COHERE_API_KEY` is properly configured
+
+### Logging and Monitoring
+- **Backend Logs**: Available in Hugging Face Spaces logs interface
+- **Frontend Analytics**: Available in Vercel dashboard
+
+## Security Best Practices
+1. **Environment Variables**: Never expose secrets in client-side code
+2. **API Keys**: Store API keys securely in environment variables
+3. **JWT Tokens**: Use strong secrets and proper expiration times
+4. **Input Validation**: Both frontend and backend should validate inputs
+5. **HTTPS**: Ensure both frontend and backend use HTTPS
+
+This deployment guide ensures your AI Todo Chatbot application is properly deployed with the frontend on Vercel and backend on Hugging Face Spaces, providing a scalable, secure, and maintainable solution.
