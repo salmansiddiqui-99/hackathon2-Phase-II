@@ -1,0 +1,127 @@
+openapi: 3.0.3
+info:
+  title: Chat API
+  description: API for chat conversation management and messaging
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000
+    description: Development server
+  - url: https://api.example.com
+    description: Production server
+paths:
+  /api/{user_id}/chat:
+    post:
+      summary: Process chat message and return assistant response
+      description: Creates a new message in a conversation or adds to existing conversation, returns assistant response
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID of the authenticated user
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+      responses:
+        '200':
+          description: Successfully processed chat message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
+        '400':
+          description: Bad request - invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized - invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden - user attempting to access another user's conversations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - bearerAuth: []
+      tags:
+        - Chat
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    ChatRequest:
+      type: object
+      properties:
+        conversation_id:
+          type: integer
+          nullable: true
+          description: Optional ID of existing conversation (creates new if not provided)
+          example: 123
+        message:
+          type: string
+          minLength: 1
+          maxLength: 10000
+          description: User's message content
+          example: "What are my tasks for today?"
+      required:
+        - message
+    ChatResponse:
+      type: object
+      properties:
+        conversation_id:
+          type: integer
+          description: ID of the conversation (newly created or existing)
+          example: 123
+        response:
+          type: string
+          description: Assistant's response to the message
+          example: "You have 3 tasks scheduled for today..."
+        tool_calls:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Name of the tool called
+              arguments:
+                type: object
+                description: Arguments passed to the tool
+          description: Any tool calls made by the assistant
+          example: []
+      required:
+        - conversation_id
+        - response
+        - tool_calls
+    Error:
+      type: object
+      properties:
+        detail:
+          type: string
+          description: Error message
+          example: "Invalid token"
+      required:
+        - detail
+tags:
+  - name: Chat
+    description: Chat conversation management endpoints

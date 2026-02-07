@@ -1,6 +1,7 @@
 from sqlmodel import SQLModel, Field
 from datetime import datetime
 from typing import Optional
+from .base import TimestampMixin
 from ..auth import get_password_hash
 
 
@@ -10,13 +11,11 @@ class UserBase(SQLModel):
     email: str = Field(unique=True, min_length=5, max_length=255)
 
 
-class User(UserBase, table=True):
+class User(UserBase, TimestampMixin, table=True):
     """User model for database storage"""
     id: Optional[int] = Field(default=None, primary_key=True)
     hashed_password: str = Field(min_length=1)
     is_active: bool = Field(default=True)
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
 
     def set_password(self, password: str):
         """Hash and set the user's password"""

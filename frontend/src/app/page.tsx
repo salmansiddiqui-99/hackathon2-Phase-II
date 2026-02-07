@@ -7,16 +7,8 @@ export default function HomePage() {
   const router = useRouter();
 
   useEffect(() => {
-    // Check if user is logged in
-    const token = localStorage.getItem('token');
-
-    if (token) {
-      // If logged in, redirect to tasks
-      router.push('/tasks');
-    } else {
-      // If not logged in, redirect to login
-      router.push('/login');
-    }
+    // Redirect to tasks page (auth check will be handled by ProtectedLayout)
+    router.push('/tasks');
   }, [router]);
 
   return (

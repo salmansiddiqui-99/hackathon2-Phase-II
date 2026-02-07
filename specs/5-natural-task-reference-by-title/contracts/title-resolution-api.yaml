@@ -1,0 +1,74 @@
+# API Contract: Enhanced Chat Interaction with Title Resolution
+
+## Overview
+This contract defines how the AI assistant handles task operations using title references instead of numeric IDs.
+
+## Interaction: Task Operation Using Title
+
+### Request
+**Command Types**: Complete, Delete, Update, List
+
+**Examples**:
+- "complete my task buy groceries"
+- "delete the task named finish report"
+- "update 'morning run' to 'evening walk'"
+- "show me tasks with 'grocery' in title"
+
+### Agent Processing
+**Steps**:
+1. **Intent Recognition**: Agent recognizes title-based task command
+2. **Internal Task Query**: Agent calls `list_tasks` internally to retrieve current user tasks
+3. **Title Matching**: Agent performs fuzzy/partial/case-insensitive matching:
+   - Exact match → proceed with single task
+   - Partial match → rank by similarity
+   - Multiple matches → prepare clarification response
+   - No match → prepare helpful error response
+4. **Action Execution**: Based on match results, agent either:
+   - Executes MCP tool with found task_id
+   - Asks user for clarification
+   - Responds with helpful error message
+
+### Response Patterns
+
+#### Successful Match Response
+**Template**:
+- Complete: "I've completed the task '{title}' for you."
+- Delete: "I've deleted the task '{title}'."
+- Update: "I've updated the task '{title}'."
+
+#### Clarification Response
+**When**: Multiple tasks match the user's title reference
+
+**Template**:
+```
+"I found multiple tasks with similar titles:
+1. {title1}
+2. {title2}
+3. {title3}
+Which one do you mean?"
+```
+
+**User Reply Options**:
+- Number selection: "1", "first", "the second one"
+- Full title: "buy groceries for party"
+- Additional detail: "the one for weekend"
+
+#### Error Response
+**When**: No tasks match the user's title reference
+
+**Template**:
+```
+"I couldn't find a task called '{user_input}'. Here are your current tasks:
+{list_of_tasks_with_titles}
+```
+
+### Security
+- All operations are scoped to the authenticated user's data
+- Internal `list_tasks` call uses authenticated user context
+- Title matching only operates within user's task set
+- No user can access or modify other users' tasks
+
+### Performance
+- Agent should minimize unnecessary `list_tasks` calls
+- Internal queries only triggered when title-based commands detected
+- Response time should remain sub-second
